@@ -1,0 +1,6 @@
+base: ../base.yaml
+paths: ../paths.yaml
+preprocessing: ../preprocessing.yaml
+ner: ../ner.yaml
+relation: ../relation.yaml
+graph: ../graph.yaml
