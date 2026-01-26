@@ -1,0 +1,5 @@
+entity_types:
+  - TASK
+  - DATASET
+
+method: rule_based
