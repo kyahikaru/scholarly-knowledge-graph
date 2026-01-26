@@ -1,0 +1,8 @@
+sections:
+  keep:
+    - abstract
+    - introduction
+
+sentence:
+  min_length: 5
+  max_length: 300
