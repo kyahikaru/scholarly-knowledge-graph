@@ -1,0 +1,4 @@
+relation_types:
+  - USED_ON
+
+method: cooccurrence
