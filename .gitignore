@@ -1,0 +1,14 @@
+# Virtual environments
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local data (never commit PDFs or outputs)
+data/raw_pdfs/
+data/processed/
+data/outputs/
+
+# OS / editor noise
+.DS_Store
