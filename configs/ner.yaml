@@ -1,5 +1,5 @@
+backend: rule_based
+
 entity_types:
   - TASK
   - DATASET
-
-method: rule_based
