@@ -3,7 +3,7 @@ from neo4j import GraphDatabase
 
 class Neo4jWriter:
 
-    def __init__(self, uri="neo4j://127.0.0.1:7687", user="neo4j", password="neo4j"):
+    def __init__(self, uri="neo4j://127.0.0.1:7687", user="neo4j", password="12345678"):
         self.driver = GraphDatabase.driver(uri, auth=(user, password))
 
     def close(self):
@@ -27,20 +27,29 @@ class Neo4jWriter:
         SET e.type = $type
         """
 
-        tx.run(query, name=entity.name, type=entity.entity_type)
+        entity_name = str(entity)
+        entity_type = getattr(entity, "entity_type", "ENTITY")
+
+        tx.run(
+            query,
+            name=entity_name,
+            type=entity_type
+        )
 
     @staticmethod
     def _create_relation(tx, relation):
 
         query = """
-        MATCH (a:Entity {name: $source})
-        MATCH (b:Entity {name: $target})
-        MERGE (a)-[r:RELATED_TO {type: $rel_type}]->(b)
+        MERGE (a:Entity {name: $source})
+        MERGE (b:Entity {name: $target})
+        MERGE (a)-[:RELATED_TO]->(b)
         """
+
+        source = str(getattr(relation, "source_text", getattr(relation, "source", "unknown")))
+        target = str(getattr(relation, "target_text", getattr(relation, "target", "unknown")))
 
         tx.run(
             query,
-            source=relation.source,
-            target=relation.target,
-            rel_type=relation.relation_type,
+            source=source,
+            target=target
         )
