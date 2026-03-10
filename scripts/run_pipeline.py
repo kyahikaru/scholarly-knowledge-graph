@@ -6,35 +6,45 @@ from src.entity_extraction.extractor_factory import get_extractor
 from src.normalization.normalizer import normalize_entities
 from src.relation_extraction.heuristic_relations import extract_relations
 from src.graph_construction.graph_builder import build_graph
+from src.graph_construction.neo4j_writer import Neo4jWriter
 from src.utils.dataclasses import PipelineResult
 
 
 def run_pipeline(experiment_config_path: str) -> PipelineResult:
 
-    # Load merged configuration
     config = load_experiment_config(experiment_config_path)
 
-    # Stage 1: Ingestion
+    # Stage 1 — Load documents
     documents = load_documents(config)
 
-    # Stage 2: Preprocessing
+    # Stage 2 — Preprocess PDFs
     documents = preprocess_documents(documents, config)
 
-    # Stage 3: Sentence representation
+    # Stage 3 — Sentence splitting
     sentences = split_into_sentences(documents, config)
 
-    # Stage 4: Entity extraction
-    extract_entities = get_extractor(config)
-    mentions = extract_entities(sentences, config)
+    # Stage 4 — Entity extraction
+    extractor = get_extractor(config)
+    mentions = extractor(sentences, config)
 
-    # Stage 5: Normalization
+    # Stage 5 — Entity normalization
     entities, entity_links = normalize_entities(mentions, config)
 
-    # Stage 6: Relation extraction
+    # Stage 6 — Relation extraction
     relations = extract_relations(sentences, entities, config)
 
-    # Stage 7: Graph preparation
+    # Stage 7 — Build graph objects
     nodes, edges = build_graph(entities, relations, config)
+
+    # Stage 8 — Write graph to Neo4j
+    writer = Neo4jWriter(
+        uri="neo4j://127.0.0.1:7687",
+        user="neo4j",
+        password="NEO4J_PASSWORD"
+    )
+
+    writer.write_graph(entities, relations)
+    writer.close()
 
     result = PipelineResult(
         documents=documents,
