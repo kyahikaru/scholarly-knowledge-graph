@@ -2,7 +2,7 @@ from src.utils.config_loader import load_experiment_config
 from src.ingestion.loader import load_documents
 from src.preprocessing.pdf_preprocessor import preprocess_documents
 from src.sentence_representation.sentence_splitter import split_into_sentences
-from src.entity_extraction.rule_based_extractor import extract_entities
+from src.entity_extraction.extractor_factory import get_extractor
 from src.normalization.normalizer import normalize_entities
 from src.relation_extraction.heuristic_relations import extract_relations
 from src.graph_construction.graph_builder import build_graph
@@ -10,6 +10,7 @@ from src.utils.dataclasses import PipelineResult
 
 
 def run_pipeline(experiment_config_path: str) -> PipelineResult:
+
     # Load merged configuration
     config = load_experiment_config(experiment_config_path)
 
@@ -23,6 +24,7 @@ def run_pipeline(experiment_config_path: str) -> PipelineResult:
     sentences = split_into_sentences(documents, config)
 
     # Stage 4: Entity extraction
+    extract_entities = get_extractor(config)
     mentions = extract_entities(sentences, config)
 
     # Stage 5: Normalization
@@ -34,7 +36,6 @@ def run_pipeline(experiment_config_path: str) -> PipelineResult:
     # Stage 7: Graph preparation
     nodes, edges = build_graph(entities, relations, config)
 
-    # Final assembled result
     result = PipelineResult(
         documents=documents,
         sentences=sentences,
@@ -47,7 +48,7 @@ def run_pipeline(experiment_config_path: str) -> PipelineResult:
 
 
 if __name__ == "__main__":
-    # Example run (path can be changed later)
+
     result = run_pipeline("configs/experiments/dev.yaml")
 
     print("Pipeline completed.")
