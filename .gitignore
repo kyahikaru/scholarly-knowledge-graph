@@ -13,7 +13,7 @@ __pycache__/
 *.pyd
 
 # -------------------------
-# Local data (never commit PDFs or outputs)
+# Local data
 # -------------------------
 data/raw_pdfs/
 data/processed/
@@ -27,7 +27,7 @@ ner_model.pt
 *.pth
 
 # -------------------------
-# Environment / secrets
+# Environment
 # -------------------------
 .env
 .env.local
