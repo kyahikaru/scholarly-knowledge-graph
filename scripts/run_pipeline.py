@@ -1,3 +1,5 @@
+import os
+
 from src.utils.config_loader import load_experiment_config
 from src.ingestion.loader import load_documents
 from src.preprocessing.pdf_preprocessor import preprocess_documents
@@ -40,7 +42,7 @@ def run_pipeline(experiment_config_path: str) -> PipelineResult:
     writer = Neo4jWriter(
         uri="neo4j://127.0.0.1:7687",
         user="neo4j",
-        password="NEO4J_PASSWORD"
+        password=os.getenv("NEO4J_PASSWORD")
     )
 
     writer.write_graph(entities, relations)
