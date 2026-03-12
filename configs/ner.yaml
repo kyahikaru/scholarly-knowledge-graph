@@ -3,3 +3,6 @@ backend: bilstm_crf
 entity_types:
   - TASK
   - DATASET
+  - METHOD
+  - MODEL
+  - METRIC
