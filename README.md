@@ -1,6 +1,8 @@
 # Scholarly Knowledge Graph Construction
 
-This project implements an end-to-end pipeline for constructing a knowledge graph from NLP research papers. The system processes scholarly PDF documents, extracts important entities such as tasks and datasets, identifies relationships between them, and stores the results in a Neo4j graph database. The resulting graph can be queried, visualized, and analyzed using standard graph statistics and link prediction metrics. The objective of this project is to demonstrate a complete research engineering workflow that integrates natural language processing, graph construction, and evaluation into a reproducible system.
+End-to-end NLP pipeline for constructing a knowledge graph from scholarly research papers.
+
+This project implements an end-to-end pipeline for constructing a knowledge graph from NLP research papers. The system processes scholarly PDF documents, extracts important entities such as tasks and datasets, identifies relationships between them, and stores the results in a Neo4j graph database. The resulting graph can be queried, visualized, and analyzed using standard graph statistics and link prediction metrics. The project is designed as a reproducible research engineering system rather than a standalone machine learning model.
 
 ## Example Knowledge Graph
 
@@ -25,7 +27,7 @@ Documents processed: 8
 Sentences extracted: 5356  
 Entities discovered: 4  
 Relation instances: 62  
-Unique graph edges: 4  
+Unique graph edges after deduplication: 4  
 Graph density: 0.333  
 Average degree: 2.0  
 
@@ -43,7 +45,7 @@ scholarly-knowledge-graph
 configs  
 data  
 └── raw_pdfs  
-docs  
+docs.  
 └── images  
     ├── pipeline_architecture.png  
     ├── knowledge_graph_example.png  
@@ -84,7 +86,7 @@ Python
 PyTorch  
 Neo4j  
 BiLSTM-CRF for entity recognition  
-Heuristic relation extraction  
+Heuristic relation extraction based on entity co-occurrence  
 Graph analytics and evaluation
 
 ## Limitations
