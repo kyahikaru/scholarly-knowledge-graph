@@ -16,15 +16,16 @@ def extract_relations(
     Heuristic relation extraction for MWP.
     Creates USED_ON relations when TASK and DATASET co-occur in a sentence.
     """
+
     relations: List[RelationInstance] = []
     relation_counter = 0
 
-    # Index entities by lowercase name for fast lookup
     entity_index: Dict[str, CanonicalEntity] = {
         e.canonical_name.lower(): e for e in entities
     }
 
     for sent in sentences:
+
         sent_text = sent.text.lower()
 
         tasks = [
@@ -39,6 +40,7 @@ def extract_relations(
 
         for task in tasks:
             for dataset in datasets:
+
                 relation = RelationInstance(
                     relation_id=f"rel_{relation_counter}",
                     source_entity_id=task.entity_id,
@@ -46,6 +48,7 @@ def extract_relations(
                     relation_type="USED_ON",
                     sentence_id=sent.sentence_id,
                 )
+
                 relations.append(relation)
                 relation_counter += 1
 
