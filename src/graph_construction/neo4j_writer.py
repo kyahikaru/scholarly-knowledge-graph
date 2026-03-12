@@ -11,13 +11,16 @@ class Neo4jWriter:
 
     def write_graph(self, entities, relations):
 
+        # Build ID → name lookup
+        entity_lookup = {e.entity_id: e.canonical_name for e in entities}
+
         with self.driver.session() as session:
 
             for entity in entities:
                 session.execute_write(self._create_entity, entity)
 
             for relation in relations:
-                session.execute_write(self._create_relation, relation)
+                session.execute_write(self._create_relation, relation, entity_lookup)
 
     @staticmethod
     def _create_entity(tx, entity):
@@ -27,7 +30,6 @@ class Neo4jWriter:
         SET e.type = $type
         """
 
-        # Use canonical entity name instead of object serialization
         entity_name = getattr(entity, "canonical_name", None)
 
         if not entity_name:
@@ -36,37 +38,21 @@ class Neo4jWriter:
         entity_name = str(entity_name).strip().lower()
         entity_type = getattr(entity, "entity_type", "ENTITY")
 
-        tx.run(
-            query,
-            name=entity_name,
-            type=entity_type
-        )
+        tx.run(query, name=entity_name, type=entity_type)
 
     @staticmethod
-    def _create_relation(tx, relation):
+    def _create_relation(tx, relation, entity_lookup):
 
-        source = getattr(relation, "source_text", getattr(relation, "source", None))
-        target = getattr(relation, "target_text", getattr(relation, "target", None))
+        source = entity_lookup.get(relation.source_entity_id)
+        target = entity_lookup.get(relation.target_entity_id)
 
-        # Clean values
-        source = str(source).strip().lower() if source else None
-        target = str(target).strip().lower() if target else None
-
-        # Skip invalid relations
         if not source or not target:
             return
 
-        if source == "unknown" or target == "unknown":
-            return
-
         query = """
-        MERGE (a:Entity {name: $source})
-        MERGE (b:Entity {name: $target})
-        MERGE (a)-[:RELATED_TO]->(b)
+        MATCH (a:Entity {name: $source})
+        MATCH (b:Entity {name: $target})
+        MERGE (a)-[:USED_ON]->(b)
         """
 
-        tx.run(
-            query,
-            source=source,
-            target=target
-        )
+        tx.run(query, source=source, target=target)
