@@ -1,25 +1,41 @@
-def compute_graph_statistics(entities, relations):
+from typing import List
+from src.utils.dataclasses import CanonicalEntity, RelationInstance
 
-    num_nodes = len(entities)
-    num_edges = len(relations)
 
-    # Graph density for directed graph
-    if num_nodes <= 1:
-        density = 0
+def compute_graph_statistics(
+    entities: List[CanonicalEntity],
+    relations: List[RelationInstance],
+):
+    """
+    Compute structural statistics for the knowledge graph.
+    """
+
+    nodes = len(entities)
+
+    # Count unique edges (same logic as Neo4j MERGE)
+    unique_edges = set(
+        (r.source_entity_id, r.target_entity_id) for r in relations
+    )
+
+    edges = len(unique_edges)
+
+    # Density for directed graph
+    if nodes > 1:
+        density = edges / (nodes * (nodes - 1))
     else:
-        density = num_edges / (num_nodes * (num_nodes - 1))
+        density = 0
 
     # Average degree
-    if num_nodes == 0:
-        avg_degree = 0
+    if nodes > 0:
+        avg_degree = (2 * edges) / nodes
     else:
-        avg_degree = (2 * num_edges) / num_nodes
+        avg_degree = 0
 
     stats = {
-        "nodes": num_nodes,
-        "edges": num_edges,
+        "nodes": nodes,
+        "edges": edges,
         "density": density,
-        "average_degree": avg_degree
+        "average_degree": avg_degree,
     }
 
     return stats
