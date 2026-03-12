@@ -4,19 +4,19 @@ This project implements an end-to-end pipeline for constructing a knowledge grap
 
 ## Example Knowledge Graph
 
-![Knowledge Graph](docs/images/knowledge_graph_example.png)
+![Knowledge Graph](docs/knowledge_graph_example.png)
 
 Figure 1: Example knowledge graph generated from the processed research paper corpus. The graph captures relationships between entities extracted from scholarly papers. In this prototype, task and dataset entities are connected using heuristic relations derived from sentence co-occurrence.
 
 ## System Architecture
 
-![Pipeline Architecture](docs/images/pipeline_architecture.png)
+![Pipeline Architecture](docs/pipeline_architecture.png)
 
 Figure 2: End-to-end pipeline for scholarly knowledge graph construction. The pipeline consists of the following stages. Document ingestion loads research papers from PDF format. Preprocessing cleans the raw documents and converts them into structured text. Sentence segmentation splits the text into individual sentences for downstream processing. Entity extraction uses a BiLSTM-CRF model to identify entities such as tasks and datasets. Entity normalization consolidates extracted mentions into canonical entities. Relation extraction applies heuristic rules to detect relationships between entities based on sentence co-occurrence. Graph construction transforms entities and relations into graph nodes and edges. Graph storage saves the resulting graph in a Neo4j database. Finally, evaluation computes graph statistics and link prediction metrics to analyze the structure of the generated knowledge graph.
 
 ## Evaluation Results
 
-![Evaluation Metrics](docs/images/evaluation_results.png)
+![Evaluation Metrics](docs/evaluation_results.png)
 
 Figure 3: Summary of graph statistics and link prediction evaluation metrics produced by the system.
 
