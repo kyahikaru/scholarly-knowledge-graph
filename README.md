@@ -6,7 +6,7 @@ This project implements an end-to-end pipeline for constructing a knowledge grap
 
 ## Example Knowledge Graph
 
-![Knowledge Graph](docs./knowledge_graph_example.png)
+![Knowledge Graph](docs./evaluation_results.png)
 
 Figure 1: Example knowledge graph generated from the processed research paper corpus. The graph captures relationships between entities extracted from scholarly papers. In this prototype, task and dataset entities are connected using heuristic relations derived from sentence co-occurrence.
 
@@ -18,7 +18,7 @@ Figure 2: End-to-end pipeline for scholarly knowledge graph construction. The pi
 
 ## Evaluation Results
 
-![Evaluation Metrics](docs./evaluation_results.png)
+![Evaluation Metrics](docs./knowledge_graph_example.png)
 
 Figure 3: Summary of graph statistics and link prediction evaluation metrics produced by the system.
 
