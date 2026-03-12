@@ -27,7 +27,13 @@ class Neo4jWriter:
         SET e.type = $type
         """
 
-        entity_name = str(entity)
+        # Use canonical entity name instead of object serialization
+        entity_name = getattr(entity, "canonical_name", None)
+
+        if not entity_name:
+            return
+
+        entity_name = str(entity_name).strip().lower()
         entity_type = getattr(entity, "entity_type", "ENTITY")
 
         tx.run(
@@ -39,14 +45,25 @@ class Neo4jWriter:
     @staticmethod
     def _create_relation(tx, relation):
 
+        source = getattr(relation, "source_text", getattr(relation, "source", None))
+        target = getattr(relation, "target_text", getattr(relation, "target", None))
+
+        # Clean values
+        source = str(source).strip().lower() if source else None
+        target = str(target).strip().lower() if target else None
+
+        # Skip invalid relations
+        if not source or not target:
+            return
+
+        if source == "unknown" or target == "unknown":
+            return
+
         query = """
         MERGE (a:Entity {name: $source})
         MERGE (b:Entity {name: $target})
         MERGE (a)-[:RELATED_TO]->(b)
         """
-
-        source = str(getattr(relation, "source_text", getattr(relation, "source", "unknown")))
-        target = str(getattr(relation, "target_text", getattr(relation, "target", "unknown")))
 
         tx.run(
             query,
