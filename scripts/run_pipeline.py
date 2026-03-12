@@ -1,7 +1,6 @@
-import os
-
 from src.utils.config_loader import load_experiment_config
 from src.ingestion.loader import load_documents
+from evaluation.graph_statistics import compute_graph_statistics
 from src.preprocessing.pdf_preprocessor import preprocess_documents
 from src.sentence_representation.sentence_splitter import split_into_sentences
 from src.entity_extraction.extractor_factory import get_extractor
@@ -42,11 +41,21 @@ def run_pipeline(experiment_config_path: str) -> PipelineResult:
     writer = Neo4jWriter(
         uri="neo4j://127.0.0.1:7687",
         user="neo4j",
-        password=os.getenv("NEO4J_PASSWORD")
+        password="NEO4J_PASSWORD"
     )
 
     writer.write_graph(entities, relations)
     writer.close()
+
+    # Stage 9 — Graph statistics
+    stats = compute_graph_statistics(entities, relations)
+
+    print("\nGraph Statistics")
+    print("----------------")
+    print(f"Nodes: {stats['nodes']}")
+    print(f"Edges: {stats['edges']}")
+    print(f"Density: {stats['density']:.4f}")
+    print(f"Average Degree: {stats['average_degree']:.2f}")
 
     result = PipelineResult(
         documents=documents,
