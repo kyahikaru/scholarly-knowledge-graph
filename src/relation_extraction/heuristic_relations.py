@@ -13,8 +13,12 @@ def extract_relations(
     config: dict,
 ) -> List[RelationInstance]:
     """
-    Heuristic relation extraction for MWP.
-    Creates USED_ON relations when TASK and DATASET co-occur in a sentence.
+    Heuristic relation extraction.
+
+    Relations generated:
+    TASK -> DATASET : USED_ON
+    TASK -> TASK : RELATED_TASK
+    DATASET -> DATASET : RELATED_DATASET
     """
 
     relations: List[RelationInstance] = []
@@ -38,6 +42,7 @@ def extract_relations(
             if e.entity_type == "DATASET" and e.canonical_name in sent_text
         ]
 
+        # TASK -> DATASET relations
         for task in tasks:
             for dataset in datasets:
 
@@ -46,6 +51,36 @@ def extract_relations(
                     source_entity_id=task.entity_id,
                     target_entity_id=dataset.entity_id,
                     relation_type="USED_ON",
+                    sentence_id=sent.sentence_id,
+                )
+
+                relations.append(relation)
+                relation_counter += 1
+
+        # TASK -> TASK relations
+        for i in range(len(tasks)):
+            for j in range(i + 1, len(tasks)):
+
+                relation = RelationInstance(
+                    relation_id=f"rel_{relation_counter}",
+                    source_entity_id=tasks[i].entity_id,
+                    target_entity_id=tasks[j].entity_id,
+                    relation_type="RELATED_TASK",
+                    sentence_id=sent.sentence_id,
+                )
+
+                relations.append(relation)
+                relation_counter += 1
+
+        # DATASET -> DATASET relations
+        for i in range(len(datasets)):
+            for j in range(i + 1, len(datasets)):
+
+                relation = RelationInstance(
+                    relation_id=f"rel_{relation_counter}",
+                    source_entity_id=datasets[i].entity_id,
+                    target_entity_id=datasets[j].entity_id,
+                    relation_type="RELATED_DATASET",
                     sentence_id=sent.sentence_id,
                 )
 
