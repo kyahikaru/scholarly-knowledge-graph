@@ -1,6 +1,7 @@
 from src.utils.config_loader import load_experiment_config
 from src.ingestion.loader import load_documents
 from evaluation.graph_statistics import compute_graph_statistics
+from evaluation.link_prediction import evaluate_link_prediction
 from src.preprocessing.pdf_preprocessor import preprocess_documents
 from src.sentence_representation.sentence_splitter import split_into_sentences
 from src.entity_extraction.extractor_factory import get_extractor
@@ -57,6 +58,16 @@ def run_pipeline(experiment_config_path: str) -> PipelineResult:
     print(f"Density: {stats['density']:.4f}")
     print(f"Average Degree: {stats['average_degree']:.2f}")
 
+    # Stage 10 — Link prediction evaluation
+    link_metrics = evaluate_link_prediction(entities, relations)
+
+    print("\nLink Prediction Metrics")
+    print("----------------------")
+    print(f"MRR: {link_metrics['MRR']:.4f}")
+    print(f"Hits@1: {link_metrics['Hits@1']:.4f}")
+    print(f"Hits@3: {link_metrics['Hits@3']:.4f}")
+    print(f"Hits@10: {link_metrics['Hits@10']:.4f}")
+
     result = PipelineResult(
         documents=documents,
         sentences=sentences,
@@ -72,7 +83,7 @@ if __name__ == "__main__":
 
     result = run_pipeline("configs/experiments/dev.yaml")
 
-    print("Pipeline completed.")
+    print("\nPipeline completed.")
     print(f"Documents: {len(result.documents)}")
     print(f"Sentences: {len(result.sentences)}")
     print(f"Entities: {len(result.entities)}")
