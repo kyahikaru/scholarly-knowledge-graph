@@ -199,53 +199,6 @@ Hits@10: 1.0
 These metrics provide a basic evaluation of the structural properties of the generated knowledge graph.
 
 
-# Project Structure
-
-scholarly-knowledge-graph
-│
-├── configs
-│   ├── pipeline.yaml
-│   └── experiments
-│
-├── data
-│   └── raw_pdfs
-│
-├── docs
-│   └── images
-│
-├── evaluation
-│   ├── graph_statistics.py
-│   ├── link_prediction.py
-│   └── graph_embeddings.py
-│
-├── scripts
-│   ├── run_pipeline.py
-│   ├── run_experiment.py
-│   └── check_environment.py
-│
-├── src
-│   ├── entity_extraction
-│   │   ├── rule_based_extractor.py
-│   │   ├── bilstm_crf_extractor.py
-│   │   ├── transformer_extractor.py
-│   │   └── extractor_factory.py
-│   │
-│   ├── preprocessing
-│   ├── normalization
-│   ├── relation_extraction
-│   │   ├── heuristic_relations.py
-│   │   ├── transformer_relations.py
-│   │   └── relation_factory.py
-│   │
-│   ├── graph_construction
-│   └── utils
-│
-├── cache
-│
-├── requirements.txt
-└── README.md
-
-
 # Technologies Used
 
 * Python
