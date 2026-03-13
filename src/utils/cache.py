@@ -3,6 +3,8 @@ import json
 import logging
 from dataclasses import asdict, is_dataclass
 
+from src.utils.dataclasses import EntityMention
+
 logger = logging.getLogger(__name__)
 
 
@@ -11,6 +13,7 @@ def cache_exists(path: str) -> bool:
 
 
 def serialize_item(item):
+
     if is_dataclass(item):
         return asdict(item)
 
@@ -24,9 +27,16 @@ def serialize_item(item):
 
 
 def load_cache(path: str):
+
     logger.info(f"Loading cached data from {path}")
+
     with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+        data = json.load(f)
+
+    # reconstruct dataclass objects
+    mentions = [EntityMention(**item) for item in data]
+
+    return mentions
 
 
 def save_cache(data, path: str):
