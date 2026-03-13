@@ -226,5 +226,3 @@ Potential extensions include:
 # License
 
 This project is provided for **research and educational purposes**.
-
-```
