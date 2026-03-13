@@ -1,11 +1,3 @@
-Below is the **updated README** based on your current one.
-It **keeps your structure**, **adds Option A (Relation Extraction Backend Architecture)** and **Option B (Graph Embeddings with Node2Vec)**, and **updates the pipeline stages accordingly**.
-
-It is provided as **one single Markdown block** so you can **copy-paste directly into GitHub**.
-
----
-
-````
 # Scholarly Knowledge Graph Construction
 
 End-to-end research engineering pipeline for constructing a knowledge graph from scholarly research papers.
@@ -47,7 +39,6 @@ The architecture separates **data ingestion, NLP modeling, graph construction, g
 
 # System Design
 
-```text
 PDF Papers
    │
    ▼
@@ -81,9 +72,7 @@ Neo4j Knowledge Graph
    │
    ▼
 Graph Statistics + Link Prediction
-````
 
----
 
 # Key Engineering Features
 
@@ -135,9 +124,9 @@ Embeddings are computed after graph construction using the **NetworkX + Node2Vec
 
 All pipeline behavior is controlled through:
 
-```
+
 configs/pipeline.yaml
-```
+
 
 This allows switching models, datasets, and infrastructure without modifying code.
 
@@ -147,9 +136,9 @@ This allows switching models, datasets, and infrastructure without modifying cod
 
 NER results are cached to accelerate repeated experiments.
 
-```
+
 cache/ner_mentions.json
-```
+
 
 This significantly reduces runtime during iterative development.
 
@@ -161,9 +150,8 @@ Database credentials are **never stored in the repository**.
 
 Neo4j authentication uses environment variables:
 
-```
 export NEO4J_PASSWORD="your_password"
-```
+
 
 ---
 
@@ -173,7 +161,7 @@ The system includes structured logging and stage timing metrics.
 
 Example pipeline log output:
 
-```
+
 Stage 1 — Loading documents
 Stage 2 — Preprocessing PDFs
 Stage 3 — Sentence splitting
@@ -185,52 +173,51 @@ Stage 8 — Graph embeddings
 Stage 9 — Neo4j graph write
 Stage 10 — Graph statistics
 Stage 11 — Link prediction evaluation
-```
 
----
+
 
 # Installation
 
 Clone the repository:
 
-```
+
 git clone https://github.com/<username>/scholarly-knowledge-graph.git
 cd scholarly-knowledge-graph
-```
+
 
 Install dependencies:
 
-```
+
 pip install -r requirements.txt
-```
+
 
 Verify environment:
 
-```
-python scripts/check_environment.py
-```
 
----
+python scripts/check_environment.py
+
+
+
 
 # Running the Pipeline
 
 Place research paper PDFs in:
 
-```
+
 data/raw_pdfs/
-```
+
 
 Set the Neo4j password:
 
-```
+
 export NEO4J_PASSWORD="your_password"
-```
+
 
 Run the pipeline:
 
-```
+
 PYTHONPATH=. python scripts/run_pipeline.py
-```
+
 
 The pipeline will:
 
@@ -252,31 +239,29 @@ Example metrics produced by the pipeline:
 
 ## Graph Statistics
 
-```
 Documents processed: 8
 Sentences extracted: 5356
 Entities discovered: 4
 Relations discovered: 236
 Graph density: 0.5
 Average degree: 3.0
-```
+
 
 ## Link Prediction Metrics
 
-```
 MRR: 1.0
 Hits@1: 1.0
 Hits@3: 1.0
 Hits@10: 1.0
-```
+
 
 These metrics provide a basic evaluation of the structural properties of the generated knowledge graph.
 
----
+
 
 # Project Structure
 
-```
+
 scholarly-knowledge-graph
 │
 ├── configs
@@ -320,7 +305,7 @@ scholarly-knowledge-graph
 │
 ├── requirements.txt
 └── README.md
-```
+
 
 ---
 
@@ -356,5 +341,5 @@ This project is provided for **research and educational purposes**.
 
 ```
 
-Your repo now reads like a **proper research engineering system**, not just a script pipeline.
+
 ```
