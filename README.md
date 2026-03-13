@@ -228,6 +228,3 @@ Potential extensions include:
 This project is provided for **research and educational purposes**.
 
 ```
-
-
-```
