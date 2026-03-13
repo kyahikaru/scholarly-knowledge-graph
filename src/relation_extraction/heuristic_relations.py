@@ -12,14 +12,6 @@ def extract_relations(
     entities: List[CanonicalEntity],
     config: dict,
 ) -> List[RelationInstance]:
-    """
-    Heuristic relation extraction.
-
-    Relations generated:
-    TASK -> DATASET : USED_ON
-    TASK -> TASK : RELATED_TASK
-    DATASET -> DATASET : RELATED_DATASET
-    """
 
     relations: List[RelationInstance] = []
     relation_counter = 0
@@ -42,7 +34,6 @@ def extract_relations(
             if e.entity_type == "DATASET" and e.canonical_name in sent_text
         ]
 
-        # TASK -> DATASET relations
         for task in tasks:
             for dataset in datasets:
 
@@ -57,7 +48,6 @@ def extract_relations(
                 relations.append(relation)
                 relation_counter += 1
 
-        # TASK -> TASK relations
         for i in range(len(tasks)):
             for j in range(i + 1, len(tasks)):
 
@@ -72,7 +62,6 @@ def extract_relations(
                 relations.append(relation)
                 relation_counter += 1
 
-        # DATASET -> DATASET relations
         for i in range(len(datasets)):
             for j in range(i + 1, len(datasets)):
 
