@@ -9,9 +9,12 @@ logger = logging.getLogger(__name__)
 
 
 class TransformerNERExtractor:
+    """
+    Transformer-based NER extractor using HuggingFace models.
+    Default model can be SciBERT-compatible checkpoints fine-tuned for NER.
+    """
 
     def __init__(self, model_name: str):
-
         logger.info(f"Loading transformer NER model: {model_name}")
 
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -29,16 +32,18 @@ class TransformerNERExtractor:
 
         logger.info("Transformer NER model loaded successfully")
 
-    def __call__(self, sentences: List[str], config: Dict[str, Any]):
+    def __call__(self, sentences: List[str], config: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Extract entities from sentences using transformer model.
+        Returns mention dictionaries compatible with the existing pipeline.
+        """
 
         mentions = []
 
         for sentence in sentences:
-
             entities = self.pipeline(sentence)
 
             for ent in entities:
-
                 mention = {
                     "text": ent["word"],
                     "label": ent["entity_group"],
