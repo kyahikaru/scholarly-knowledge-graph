@@ -1,0 +1,22 @@
+experiment_config: configs/experiments/dev.yaml
+
+data:
+  pdf_path: data/raw_pdfs
+
+models:
+  ner:
+    backend: transformer
+    transformer_model: allenai/scibert_scivocab_uncased
+
+pipeline:
+  relation_extraction: heuristic
+
+graph:
+  backend: neo4j
+
+neo4j:
+  uri: bolt://127.0.0.1:7687
+  user: neo4j
+
+cache:
+  ner_mentions: cache/ner_mentions.json
