@@ -1,39 +1,22 @@
-# -------------------------
-# Virtual environments
-# -------------------------
-venv/
-.env
-
-# -------------------------
-# Python cache
-# -------------------------
+# Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# -------------------------
-# Local data
-# -------------------------
-data/raw_pdfs/
-data/processed/
-data/outputs/
-
-# -------------------------
-# Model artifacts
-# -------------------------
-ner_model.pt
-*.pt
-*.pth
-
-# -------------------------
-# Environment
-# -------------------------
+# Virtual environments
+venv/
 .env
-.env.local
 
-# -------------------------
-# OS / editor noise
-# -------------------------
+# Cache
+cache/
+
+# OS files
 .DS_Store
 Thumbs.db
+
+# Logs
+*.log
+
+# Neo4j local data
+neo4j/
