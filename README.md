@@ -1,102 +1,301 @@
 # Scholarly Knowledge Graph Construction
 
-End-to-end NLP pipeline for constructing a knowledge graph from scholarly research papers.
+End-to-end research engineering pipeline for constructing a knowledge graph from scholarly research papers.
 
-This project implements an end to end pipeline for constructing a knowledge graph from NLP research papers. The system processes scholarly PDF documents, extracts important entities such as tasks and datasets, identifies relationships between them, and stores the results in a Neo4j graph database. The resulting graph can be queried, visualized, and analyzed using standard graph statistics and link prediction metrics. The project is designed as a reproducible research engineering system rather than a standalone machine learning model.
+This project implements a modular NLP pipeline that processes academic PDF documents, extracts key entities such as **research tasks and datasets**, identifies relationships between them, and constructs a queryable knowledge graph stored in **Neo4j**.
 
-## Example Knowledge Graph
+The system is designed as a **reproducible research engineering framework**, enabling experimentation with different NER models, relation extraction strategies, and graph analytics techniques.
 
-![Knowledge Graph](docs./evaluation_results.png)
+---
 
-Figure 1: Example knowledge graph generated from the processed research paper corpus. The graph captures relationships between entities extracted from scholarly papers. In this prototype, task and dataset entities are connected using heuristic relations derived from sentence co occurrence.
+# Example Knowledge Graph
 
-## System Architecture
+![Knowledge Graph](docs/images/evaluation_results.png)
 
-![Pipeline Architecture](docs./pipeline_architecture.png)
+*Example knowledge graph generated from processed research papers. Nodes represent extracted entities and edges represent relationships discovered between them.*
 
-Figure 2: End to end pipeline for scholarly knowledge graph construction. The pipeline consists of the following stages. Document ingestion loads research papers from PDF format. Preprocessing cleans the raw documents and converts them into structured text. Sentence segmentation splits the text into individual sentences for downstream processing. Entity extraction uses a BiLSTM-CRF model to identify entities such as tasks and datasets. Entity normalization consolidates extracted mentions into canonical entities. Relation extraction applies heuristic rules to detect relationships between entities based on sentence co-occurrence. Graph construction transforms entities and relations into graph nodes and edges. Graph storage saves the resulting graph in a Neo4j database. Finally, evaluation computes graph statistics and link prediction metrics to analyze the structure of the generated knowledge graph.
+---
 
-## Evaluation Results
+# Pipeline Architecture
 
-![Evaluation Metrics](docs./knowledge_graph_example.png)
+![Pipeline Architecture](docs/images/pipeline_architecture.png)
 
-Figure 3: Summary of graph statistics and link prediction evaluation metrics produced by the system.
+The pipeline processes scholarly documents through the following stages:
 
-Graph Statistics  
-Documents processed: 8  
-Sentences extracted: 5356  
-Entities discovered: 4  
-Relation instances: 62  
-Unique graph edges after deduplication: 4  
-Graph density: 0.333  
-Average degree: 2.0  
+1. Document ingestion from PDF files
+2. Text preprocessing and cleaning
+3. Sentence segmentation
+4. Named Entity Recognition (NER)
+5. Entity normalization
+6. Relation extraction
+7. Graph construction
+8. Graph storage in Neo4j
+9. Graph analytics and evaluation
 
-Link Prediction Metrics  
-Mean Reciprocal Rank (MRR): 1.0  
-Hits@1: 1.0  
-Hits@3: 1.0  
-Hits@10: 1.0  
+The architecture separates **data ingestion, NLP modeling, graph construction, and evaluation**, allowing individual components to evolve independently.
 
-These metrics provide a simple evaluation of the structural properties of the generated knowledge graph.
+---
 
-## Project Structure
+# System Design
 
-scholarly-knowledge-graph  
-configs  
-data  
-└── raw_pdfs  
-docs.  
-└── images  
-    ├── pipeline_architecture.png  
-    ├── knowledge_graph_example.png  
-    └── evaluation_results.png  
-evaluation  
-├── graph_statistics.py  
-└── link_prediction.py  
-scripts  
-└── run_pipeline.py  
-src  
-├── entity_extraction  
-├── relation_extraction  
-├── normalization  
-├── graph_construction  
-└── utils  
-README.md  
+```text
+PDF Papers
+   │
+   ▼
+Document Loader
+   │
+   ▼
+PDF Preprocessing
+   │
+   ▼
+Sentence Segmentation
+   │
+   ▼
+Named Entity Recognition
+(rule-based | BiLSTM-CRF | Transformer)
+   │
+   ▼
+Entity Normalization
+   │
+   ▼
+Relation Extraction
+   │
+   ▼
+Graph Construction
+   │
+   ▼
+Neo4j Knowledge Graph
+   │
+   ▼
+Graph Statistics + Link Prediction
+```
 
-## How to Run the Pipeline
+---
 
-Clone the repository  
-git clone https://github.com/<username>/scholarly-knowledge-graph.git  
-cd scholarly-knowledge-graph  
+# Key Engineering Features
 
-Install dependencies  
-pip install -r requirements.txt  
+## Modular ML Architecture
 
-Place research paper PDFs in the directory  
+NER backends are interchangeable through configuration.
+
+Supported backends:
+
+* Rule-based extractor
+* BiLSTM-CRF model
+* Transformer-based model (SciBERT)
+
+New models can be integrated without modifying the pipeline logic.
+
+---
+
+## Configuration-Driven Pipeline
+
+All pipeline behavior is controlled through:
+
+```
+configs/pipeline.yaml
+```
+
+This allows switching models, datasets, and infrastructure without modifying code.
+
+---
+
+## Experiment Caching
+
+NER results are cached to accelerate repeated experiments.
+
+```
+cache/ner_mentions.json
+```
+
+This significantly reduces runtime during iterative development.
+
+---
+
+## Secure Credential Handling
+
+Database credentials are **never stored in the repository**.
+
+Neo4j authentication uses environment variables:
+
+```
+export NEO4J_PASSWORD="your_password"
+```
+
+---
+
+## Pipeline Observability
+
+The system includes structured logging and stage timing metrics.
+
+Example pipeline log output:
+
+```
+Stage 1 — Loading documents
+Stage 2 — Preprocessing PDFs
+Stage 3 — Sentence splitting
+Stage 4 — Entity extraction
+Stage 5 — Entity normalization
+Stage 6 — Relation extraction
+Stage 7 — Graph construction
+Stage 8 — Neo4j graph write
+Stage 9 — Graph statistics
+Stage 10 — Link prediction evaluation
+```
+
+---
+
+# Installation
+
+Clone the repository:
+
+```
+git clone https://github.com/<username>/scholarly-knowledge-graph.git
+cd scholarly-knowledge-graph
+```
+
+Install dependencies:
+
+```
+pip install -r requirements.txt
+```
+
+Verify environment:
+
+```
+python scripts/check_environment.py
+```
+
+---
+
+# Running the Pipeline
+
+Place research paper PDFs in:
+
+```
 data/raw_pdfs/
+```
 
-Run the pipeline  
-PYTHONPATH=. python scripts/run_pipeline.py  
+Set the Neo4j password:
 
-The pipeline will process the documents, extract entities and relations, construct the knowledge graph, store it in Neo4j, and compute evaluation metrics.
+```
+export NEO4J_PASSWORD="your_password"
+```
 
-## Technologies Used
+Run the pipeline:
 
-Python  
-PyTorch  
-Neo4j  
-BiLSTM-CRF for entity recognition  
-Heuristic relation extraction based on entity co-occurrence  
-Graph analytics and evaluation
+```
+PYTHONPATH=. python scripts/run_pipeline.py
+```
 
-## Limitations
+The pipeline will:
 
-This project uses heuristic relation extraction based on entity co-occurrence within sentences. While effective for small experimental datasets, this approach does not capture deeper semantic relationships that require contextual reasoning. Future improvements could incorporate transformer-based relation extraction models and larger scholarly corpora.
+1. Process research papers
+2. Extract entities and relations
+3. Construct the knowledge graph
+4. Store the graph in Neo4j
+5. Compute graph statistics
+6. Evaluate link prediction metrics
 
-## Future Work
+---
 
-Possible extensions include expanding the entity types beyond tasks and datasets, incorporating transformer-based NER models, scaling the pipeline to larger research corpora, and applying graph embedding methods for improved link prediction.
+# Example Evaluation Results
 
-## License
+![Evaluation Metrics](docs/images/knowledge_graph_example.png)
 
-This project is provided for research and educational purposes.
+Example metrics produced by the pipeline:
+
+## Graph Statistics
+
+```
+Documents processed: 8
+Sentences extracted: 5356
+Entities discovered: 4
+Relations discovered: 236
+Graph density: 0.5
+Average degree: 3.0
+```
+
+## Link Prediction Metrics
+
+```
+MRR: 1.0
+Hits@1: 1.0
+Hits@3: 1.0
+Hits@10: 1.0
+```
+
+These metrics provide a basic evaluation of the structural properties of the generated knowledge graph.
+
+---
+
+# Project Structure
+
+```
+scholarly-knowledge-graph
+│
+├── configs
+│   ├── pipeline.yaml
+│   └── experiments
+│
+├── data
+│   └── raw_pdfs
+│
+├── docs
+│   └── images
+│
+├── evaluation
+│   ├── graph_statistics.py
+│   └── link_prediction.py
+│
+├── scripts
+│   ├── run_pipeline.py
+│   └── check_environment.py
+│
+├── src
+│   ├── entity_extraction
+│   │   ├── rule_based_extractor.py
+│   │   ├── bilstm_crf_extractor.py
+│   │   ├── transformer_extractor.py
+│   │   └── extractor_factory.py
+│   │
+│   ├── preprocessing
+│   ├── normalization
+│   ├── relation_extraction
+│   ├── graph_construction
+│   └── utils
+│
+├── requirements.txt
+└── README.md
+```
+
+---
+
+# Technologies Used
+
+* Python
+* PyTorch
+* Transformers (HuggingFace)
+* Neo4j Graph Database
+* PDFPlumber
+* Scikit-learn
+* NetworkX
+
+---
+
+# Future Work
+
+Potential extensions include:
+
+* Transformer-based relation extraction models
+* Larger scholarly corpora
+* Graph embeddings for link prediction
+* Graph-RAG integration with LLM systems
+* Knowledge graph visualization dashboard
+* Automatic dataset fingerprinting and cache invalidation
+
+---
+
+# License
+
+This project is provided for **research and educational purposes**.
