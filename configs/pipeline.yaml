@@ -8,8 +8,12 @@ models:
     backend: transformer
     transformer_model: allenai/scibert_scivocab_uncased
 
+  relation_extraction:
+    backend: transformer
+    transformer_model: facebook/bart-large-mnli
+
 pipeline:
-  relation_extraction: heuristic
+  relation_extraction: transformer
 
 graph:
   backend: neo4j
