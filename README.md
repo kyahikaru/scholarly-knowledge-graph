@@ -10,7 +10,7 @@ The system is designed as a **reproducible research engineering framework**, ena
 
 # Example Knowledge Graph
 
-![Knowledge Graph](docs./images/evaluation_results.png)
+![Knowledge Graph](docs./evaluation_results.png)
 
 *Example knowledge graph generated from processed research papers. Nodes represent extracted entities and edges represent relationships discovered between them.*
 
@@ -18,7 +18,7 @@ The system is designed as a **reproducible research engineering framework**, ena
 
 # Pipeline Architecture
 
-![Pipeline Architecture](docs./images/pipeline_architecture.png)
+![Pipeline Architecture](docs./pipeline_architecture.png)
 
 The pipeline processes scholarly documents through the following stages:
 
@@ -201,7 +201,7 @@ The pipeline will:
 
 # Example Evaluation Results
 
-![Evaluation Metrics](docs./images/knowledge_graph_example.png)
+![Evaluation Metrics](docs./knowledge_graph_example.png)
 
 Example metrics produced by the pipeline:
 
