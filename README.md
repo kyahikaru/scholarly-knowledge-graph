@@ -1,10 +1,18 @@
+Below is the **updated README** based on your current one.
+It **keeps your structure**, **adds Option A (Relation Extraction Backend Architecture)** and **Option B (Graph Embeddings with Node2Vec)**, and **updates the pipeline stages accordingly**.
+
+It is provided as **one single Markdown block** so you can **copy-paste directly into GitHub**.
+
+---
+
+````
 # Scholarly Knowledge Graph Construction
 
 End-to-end research engineering pipeline for constructing a knowledge graph from scholarly research papers.
 
 This project implements a modular NLP pipeline that processes academic PDF documents, extracts key entities such as **research tasks and datasets**, identifies relationships between them, and constructs a queryable knowledge graph stored in **Neo4j**.
 
-The system is designed as a **reproducible research engineering framework**, enabling experimentation with different NER models, relation extraction strategies, and graph analytics techniques.
+The system is designed as a **reproducible research engineering framework**, enabling experimentation with different NER models, relation extraction strategies, graph embeddings, and graph analytics techniques.
 
 ---
 
@@ -22,17 +30,18 @@ The system is designed as a **reproducible research engineering framework**, ena
 
 The pipeline processes scholarly documents through the following stages:
 
-1. Document ingestion from PDF files
-2. Text preprocessing and cleaning
-3. Sentence segmentation
-4. Named Entity Recognition (NER)
-5. Entity normalization
-6. Relation extraction
-7. Graph construction
-8. Graph storage in Neo4j
-9. Graph analytics and evaluation
+1. Document ingestion from PDF files  
+2. Text preprocessing and cleaning  
+3. Sentence segmentation  
+4. Named Entity Recognition (NER)  
+5. Entity normalization  
+6. Relation extraction  
+7. Graph construction  
+8. Graph embeddings (Node2Vec)  
+9. Graph storage in Neo4j  
+10. Graph analytics and evaluation  
 
-The architecture separates **data ingestion, NLP modeling, graph construction, and evaluation**, allowing individual components to evolve independently.
+The architecture separates **data ingestion, NLP modeling, graph construction, graph representation learning, and evaluation**, allowing individual components to evolve independently.
 
 ---
 
@@ -59,16 +68,20 @@ Entity Normalization
    │
    ▼
 Relation Extraction
+(heuristic | transformer)
    │
    ▼
 Graph Construction
+   │
+   ▼
+Graph Embeddings (Node2Vec)
    │
    ▼
 Neo4j Knowledge Graph
    │
    ▼
 Graph Statistics + Link Prediction
-```
+````
 
 ---
 
@@ -85,6 +98,36 @@ Supported backends:
 * Transformer-based model (SciBERT)
 
 New models can be integrated without modifying the pipeline logic.
+
+---
+
+## Relation Extraction Backend Architecture
+
+Relation extraction is implemented using a **backend factory pattern**.
+
+This allows switching between different relation extraction strategies through configuration.
+
+Supported approaches:
+
+* Heuristic rule-based relation extraction
+* Transformer-based relation classification
+
+This design allows researchers to experiment with more advanced relation extraction models without changing the pipeline structure.
+
+---
+
+## Graph Embeddings
+
+The pipeline generates **node embeddings using Node2Vec**.
+
+Graph embeddings capture structural relationships between entities in the knowledge graph and enable downstream machine learning tasks such as:
+
+* link prediction
+* node similarity search
+* clustering
+* graph-based recommendation
+
+Embeddings are computed after graph construction using the **NetworkX + Node2Vec framework**.
 
 ---
 
@@ -138,9 +181,10 @@ Stage 4 — Entity extraction
 Stage 5 — Entity normalization
 Stage 6 — Relation extraction
 Stage 7 — Graph construction
-Stage 8 — Neo4j graph write
-Stage 9 — Graph statistics
-Stage 10 — Link prediction evaluation
+Stage 8 — Graph embeddings
+Stage 9 — Neo4j graph write
+Stage 10 — Graph statistics
+Stage 11 — Link prediction evaluation
 ```
 
 ---
@@ -193,9 +237,10 @@ The pipeline will:
 1. Process research papers
 2. Extract entities and relations
 3. Construct the knowledge graph
-4. Store the graph in Neo4j
-5. Compute graph statistics
-6. Evaluate link prediction metrics
+4. Generate graph embeddings
+5. Store the graph in Neo4j
+6. Compute graph statistics
+7. Evaluate link prediction metrics
 
 ---
 
@@ -246,10 +291,12 @@ scholarly-knowledge-graph
 │
 ├── evaluation
 │   ├── graph_statistics.py
-│   └── link_prediction.py
+│   ├── link_prediction.py
+│   └── graph_embeddings.py
 │
 ├── scripts
 │   ├── run_pipeline.py
+│   ├── run_experiment.py
 │   └── check_environment.py
 │
 ├── src
@@ -262,8 +309,14 @@ scholarly-knowledge-graph
 │   ├── preprocessing
 │   ├── normalization
 │   ├── relation_extraction
+│   │   ├── heuristic_relations.py
+│   │   ├── transformer_relations.py
+│   │   └── relation_factory.py
+│   │
 │   ├── graph_construction
 │   └── utils
+│
+├── cache
 │
 ├── requirements.txt
 └── README.md
@@ -280,6 +333,7 @@ scholarly-knowledge-graph
 * PDFPlumber
 * Scikit-learn
 * NetworkX
+* Node2Vec
 
 ---
 
@@ -287,15 +341,20 @@ scholarly-knowledge-graph
 
 Potential extensions include:
 
-* Transformer-based relation extraction models
+* Graph Neural Networks for link prediction
 * Larger scholarly corpora
-* Graph embeddings for link prediction
 * Graph-RAG integration with LLM systems
 * Knowledge graph visualization dashboard
 * Automatic dataset fingerprinting and cache invalidation
+* Advanced transformer-based relation extraction
 
 ---
 
 # License
 
 This project is provided for **research and educational purposes**.
+
+```
+
+Your repo now reads like a **proper research engineering system**, not just a script pipeline.
+```
