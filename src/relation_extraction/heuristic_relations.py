@@ -13,6 +13,14 @@ def extract_relations(
     config: dict,
 ) -> List[RelationInstance]:
 
+    """
+    Heuristic relation extractor with relation limiting.
+
+    Creates CO_OCCURS_WITH relations for entities appearing
+    in the same sentence but caps the number of relations
+    per sentence to prevent graph explosion.
+    """
+
     relations: List[RelationInstance] = []
     relation_counter = 0
 
@@ -20,56 +28,31 @@ def extract_relations(
         e.canonical_name.lower(): e for e in entities
     }
 
+    MAX_ENTITIES_PER_SENTENCE = 3
+
     for sent in sentences:
 
         sent_text = sent.text.lower()
 
-        tasks = [
+        entities_in_sentence = [
             e for e in entity_index.values()
-            if e.entity_type == "TASK" and e.canonical_name in sent_text
+            if e.canonical_name.lower() in sent_text
         ]
 
-        datasets = [
-            e for e in entity_index.values()
-            if e.entity_type == "DATASET" and e.canonical_name in sent_text
-        ]
+        # Limit entities per sentence
+        entities_in_sentence = entities_in_sentence[:MAX_ENTITIES_PER_SENTENCE]
 
-        for task in tasks:
-            for dataset in datasets:
+        for i in range(len(entities_in_sentence)):
+            for j in range(i + 1, len(entities_in_sentence)):
 
-                relation = RelationInstance(
-                    relation_id=f"rel_{relation_counter}",
-                    source_entity_id=task.entity_id,
-                    target_entity_id=dataset.entity_id,
-                    relation_type="USED_ON",
-                    sentence_id=sent.sentence_id,
-                )
-
-                relations.append(relation)
-                relation_counter += 1
-
-        for i in range(len(tasks)):
-            for j in range(i + 1, len(tasks)):
+                source = entities_in_sentence[i]
+                target = entities_in_sentence[j]
 
                 relation = RelationInstance(
                     relation_id=f"rel_{relation_counter}",
-                    source_entity_id=tasks[i].entity_id,
-                    target_entity_id=tasks[j].entity_id,
-                    relation_type="RELATED_TASK",
-                    sentence_id=sent.sentence_id,
-                )
-
-                relations.append(relation)
-                relation_counter += 1
-
-        for i in range(len(datasets)):
-            for j in range(i + 1, len(datasets)):
-
-                relation = RelationInstance(
-                    relation_id=f"rel_{relation_counter}",
-                    source_entity_id=datasets[i].entity_id,
-                    target_entity_id=datasets[j].entity_id,
-                    relation_type="RELATED_DATASET",
+                    source_entity_id=source.entity_id,
+                    target_entity_id=target.entity_id,
+                    relation_type="CO_OCCURS_WITH",
                     sentence_id=sent.sentence_id,
                 )
 

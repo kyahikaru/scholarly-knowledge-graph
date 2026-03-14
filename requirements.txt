@@ -12,3 +12,5 @@ spacy==3.7.4
 nltk==3.8.1
 datasets==2.19.1
 setuptools<70
+requests==2.32.3
+(Finalize scholarly knowledge graph pipeline: transformer NER, heuristic relation extraction, graph embeddings, Neo4j integration, remove BiLSTM-CRF)

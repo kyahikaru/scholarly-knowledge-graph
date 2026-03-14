@@ -9,8 +9,8 @@ models:
     transformer_model: allenai/scibert_scivocab_uncased
 
   relation_extraction:
-    backend: transformer
-    transformer_model: facebook/bart-large-mnli
+    backend: heuristic
+    
 
 pipeline:
   relation_extraction: transformer

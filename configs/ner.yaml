@@ -1,4 +1,4 @@
-backend: bilstm_crf
+backend: transformer
 
 entity_types:
   - TASK

@@ -1,53 +1,83 @@
 from typing import List, Dict
 import re
 
-from src.utils.dataclasses import EntityMention, CanonicalEntity, EntityLink
+from src.utils.dataclasses import (
+    EntityMention,
+    CanonicalEntity,
+    EntityLink
+)
+
+
+STOP_ENTITIES = {
+    "method",
+    "approach",
+    "system",
+    "model",
+    "paper",
+    "result",
+    "experiment",
+    "technique",
+    "task",
+    "dataset"
+}
 
 
 def normalize_entities(
     mentions: List[EntityMention],
     config: dict
-) -> tuple[List[CanonicalEntity], List[EntityLink]]:
-    """
-    Basic normalization and deduplication for MWP.
-    Improves canonicalization while preventing excessive merging.
-    """
+):
 
-    canonical_entities: Dict[str, CanonicalEntity] = {}
-    links: List[EntityLink] = []
+    entities: Dict[str, CanonicalEntity] = {}
+    entity_links: List[EntityLink] = []
+
+    entity_counter = 0
+
+    frequency_counter: Dict[str, int] = {}
+
+    # First pass: count frequencies
+    for mention in mentions:
+
+        normalized = re.sub(r"\W+", " ", mention.text.lower()).strip()
+
+        if len(normalized) < 4:
+            continue
+
+        if normalized in STOP_ENTITIES:
+            continue
+
+        frequency_counter[normalized] = frequency_counter.get(normalized, 0) + 1
+
 
     for mention in mentions:
 
-        # Clean text but keep meaningful structure
-        normalized_text = re.sub(r"\W+", " ", mention.text.lower()).strip()
+        normalized = re.sub(r"\W+", " ", mention.text.lower()).strip()
 
-        # Prevent extremely short tokens from collapsing entities
-        if len(normalized_text) < 4:
-            normalized_text = mention.text.lower().strip()
+        if len(normalized) < 4:
+            continue
 
-        key = f"{mention.entity_type}:{normalized_text}"
+        if normalized in STOP_ENTITIES:
+            continue
 
-        if key not in canonical_entities:
+        if frequency_counter.get(normalized, 0) < 2:
+            continue
 
-            entity_id = f"entity_{len(canonical_entities)}"
+        if normalized not in entities:
 
-            canonical_entities[key] = CanonicalEntity(
-                entity_id=entity_id,
-                canonical_name=normalized_text,
-                entity_type=mention.entity_type,
-                aliases=[mention.text],
+            entity = CanonicalEntity(
+                entity_id=f"ent_{entity_counter}",
+                canonical_name=normalized,
+                entity_type="CONCEPT",
+                aliases=[normalized]
             )
 
-        else:
-            # Avoid duplicate aliases
-            if mention.text not in canonical_entities[key].aliases:
-                canonical_entities[key].aliases.append(mention.text)
+            entities[normalized] = entity
+            entity_counter += 1
 
         link = EntityLink(
             mention_id=mention.mention_id,
-            entity_id=canonical_entities[key].entity_id,
+            entity_id=entities[normalized].entity_id
         )
 
-        links.append(link)
+        entity_links.append(link)
 
-    return list(canonical_entities.values()), links
+    return list(entities.values()), entity_links
