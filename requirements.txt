@@ -5,5 +5,5 @@ neo4j==5.18.0
 pyyaml==6.0.1
 tqdm==4.66.2
 scikit-learn==1.4.2
-networkx==3.2.1
+networkx==2.8.8
 node2vec==0.4.6
