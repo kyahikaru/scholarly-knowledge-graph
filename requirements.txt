@@ -1,7 +1,9 @@
-torch
-transformers
-pdfplumber
-neo4j
-pyyaml
-tqdm
-scikit-learn
+torch==2.2.1
+transformers==4.39.3
+pdfplumber==0.11.0
+neo4j==5.18.0
+pyyaml==6.0.1
+tqdm==4.66.2
+scikit-learn==1.4.1
+networkx==3.2.1
+node2vec==0.4.6
