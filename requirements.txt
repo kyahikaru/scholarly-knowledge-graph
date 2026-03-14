@@ -7,3 +7,7 @@ tqdm==4.66.2
 scikit-learn==1.4.2
 networkx==2.8.8
 node2vec==0.4.6
+pandas==2.2.2
+spacy==3.7.4
+nltk==3.8.1
+datasets==2.19.1
