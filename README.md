@@ -1,4 +1,4 @@
-# Scholarly Knowledge Graph Construction
+9# Scholarly Knowledge Graph Construction
 
 An end-to-end research engineering pipeline for constructing a knowledge graph from scholarly research papers.
 
@@ -132,15 +132,25 @@ The system includes structured logging and stage timing metrics which provide vi
 Example pipeline log output includes:
 
 Stage 1 — Loading documents
+
 Stage 2 — Preprocessing PDFs
+
 Stage 3 — Sentence splitting
+
 Stage 4 — Entity extraction
+
 Stage 5 — Entity normalization
+
 Stage 6 — Relation extraction
+
 Stage 7 — Graph construction
+
 Stage 8 — Graph embeddings
+
 Stage 9 — Neo4j graph write
+
 Stage 10 — Graph statistics
+
 Stage 11 — Link prediction evaluation
 
 # Dataset
