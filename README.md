@@ -1,4 +1,4 @@
-9# Scholarly Knowledge Graph Construction
+# Scholarly Knowledge Graph Construction
 
 An end-to-end research engineering pipeline for constructing a knowledge graph from scholarly research papers.
 
