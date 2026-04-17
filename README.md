@@ -224,4 +224,4 @@ Interactive knowledge graph visualization dashboards
 
 # License
 
-This project is provided for research and educational purposes.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
